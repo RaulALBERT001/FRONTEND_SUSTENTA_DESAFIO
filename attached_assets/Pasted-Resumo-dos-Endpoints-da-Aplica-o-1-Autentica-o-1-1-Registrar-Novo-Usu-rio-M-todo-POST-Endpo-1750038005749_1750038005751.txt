@@ -1,0 +1,167 @@
+Resumo dos Endpoints da Aplicação
+1. Autenticação
+1.1. Registrar Novo Usuário
+Método: POST
+Endpoint: /api/auth/register
+Autenticação: Não requer
+Parâmetros de Entrada (JSON):
+json
+{
+  "username": "string (3-50 caracteres, obrigatório)",
+  "email": "string (formato de email válido, obrigatório)",
+  "password": "string (mínimo 6 caracteres, obrigatório)"
+}
+Resposta de Sucesso (200 OK):
+json
+{
+  "token": "string (JWT token)",
+  "username": "string",
+  "message": "User registered successfully"
+}
+Objetivo: Cria uma nova conta de usuário no sistema e retorna um token JWT para autenticação.
+1.2. Login
+Método: POST
+Endpoint: /api/auth/login
+Autenticação: Não requer
+Parâmetros de Entrada (JSON):
+json
+{
+  "username": "string (obrigatório)",
+  "password": "string (obrigatório)"
+}
+Resposta de Sucesso (200 OK):
+json
+{
+  "token": "string (JWT token)",
+  "username": "string",
+  "message": "Login successful"
+}
+Objetivo: Autentica um usuário e retorna um token JWT para acesso aos endpoints protegidos.
+2. Gerenciamento de Desafios (Requer Autenticação)
+2.1. Listar Todos os Desafios
+Método: GET
+Endpoint: /api/desafios
+Autenticação: Sim (JWT no header)
+Parâmetros de Entrada: Nenhum
+Resposta de Sucesso (200 OK):
+json
+[
+  {
+    "id": "number",
+    "titulo": "string",
+    "descricao": "string",
+    "nivelDificuldade": "string",
+    "categoria": "string",
+    "pontuacaoMaxima": "number",
+    "tempoEstimado": "number",
+    "statusAtivo": "boolean",
+    "createdAt": "datetime",
+    "updatedAt": "datetime"
+  }
+]
+Objetivo: Retorna uma lista de todos os desafios de sustentabilidade cadastrados.
+2.2. Obter Desafio por ID
+Método: GET
+Endpoint: /api/desafios/{id}
+Autenticação: Sim (JWT no header)
+Parâmetros de Entrada:
+id
+: number (path parameter)
+Resposta de Sucesso (200 OK):
+json
+{
+  "id": "number",
+  "titulo": "string",
+  "descricao": "string",
+  "nivelDificuldade": "string",
+  "categoria": "string",
+  "pontuacaoMaxima": "number",
+  "tempoEstimado": "number",
+  "statusAtivo": "boolean",
+  "createdAt": "datetime",
+  "updatedAt": "datetime"
+}
+Objetivo: Retorna os detalhes de um desafio específico.
+2.3. Criar Novo Desafio
+Método: POST
+Endpoint: /api/desafios
+Autenticação: Sim (JWT no header)
+Parâmetros de Entrada (JSON):
+json
+{
+  "titulo": "string (obrigatório, máximo 200 caracteres)",
+  "descricao": "string (opcional, máximo 2000 caracteres)",
+  "nivelDificuldade": "string (opcional, máximo 20 caracteres)",
+  "categoria": "string (opcional, máximo 100 caracteres)",
+  "pontuacaoMaxima": "number (opcional, deve ser positivo)",
+  "tempoEstimado": "number (opcional, em minutos)"
+}
+Resposta de Sucesso (201 Created):
+json
+{
+  "id": "number",
+  "titulo": "string",
+  "descricao": "string",
+  "nivelDificuldade": "string",
+  "categoria": "string",
+  "pontuacaoMaxima": "number",
+  "tempoEstimado": "number",
+  "statusAtivo": "boolean",
+  "createdAt": "datetime",
+  "updatedAt": "datetime"
+}
+Objetivo: Cria um novo desafio de sustentabilidade.
+2.4. Atualizar Desafio
+Método: PUT
+Endpoint: /api/desafios/{id}
+Autenticação: Sim (JWT no header)
+Parâmetros de Entrada:
+id
+: number (path parameter)
+JSON:
+json
+{
+  "titulo": "string (obrigatório, máximo 200 caracteres)",
+  "descricao": "string (opcional, máximo 2000 caracteres)",
+  "nivelDificuldade": "string (opcional, máximo 20 caracteres)",
+  "categoria": "string (opcional, máximo 100 caracteres)",
+  "pontuacaoMaxima": "number (opcional, deve ser positivo)",
+  "tempoEstimado": "number (opcional, em minutos)"
+}
+Resposta de Sucesso (200 OK):
+json
+{
+  "id": "number",
+  "titulo": "string",
+  "descricao": "string",
+  "nivelDificuldade": "string",
+  "categoria": "string",
+  "pontuacaoMaxima": "number",
+  "tempoEstimado": "number",
+  "statusAtivo": "boolean",
+  "createdAt": "datetime",
+  "updatedAt": "datetime"
+}
+Objetivo: Atualiza os dados de um desafio existente.
+2.5. Excluir Desafio
+Método: DELETE
+Endpoint: /api/desafios/{id}
+Autenticação: Sim (JWT no header)
+Parâmetros de Entrada:
+id
+: number (path parameter)
+Resposta de Sucesso (204 No Content): Sem corpo de resposta
+Objetivo: Remove um desafio do sistema.
+Fluxo de Uso Típico
+Registrar um novo usuário (POST /api/auth/register)
+Fazer login para obter o token JWT (POST /api/auth/login)
+Usar o token JWT no header Authorization: Bearer <token> para acessar os endpoints protegidos:
+Listar desafios (GET /api/desafios)
+Ver detalhes de um desafio (GET /api/desafios/{id})
+Criar novo desafio (POST /api/desafios)
+Atualizar desafio existente (PUT /api/desafios/{id})
+Excluir desafio (DELETE /api/desafios/{id})
+Observações sobre Autenticação
+O token JWT deve ser enviado no header Authorization no formato: Bearer <token>
+O token tem um tempo de expiração configurado (não especificado no código)
+Apenas usuários autenticados podem acessar os endpoints de gerenciamento de desafios
